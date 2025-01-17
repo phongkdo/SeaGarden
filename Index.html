@@ -6,54 +6,88 @@
     <title>ĐĂNG NHẬP</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f4f4f9;
+            background: linear-gradient(135deg, #fece78, #966000);
         }
         .container {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
         }
         input {
             display: block;
-            margin: 10px auto;
-            padding: 10px;
+            margin: 15px auto;
+            padding: 12px 15px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 80%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 320px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #8c6f4a;
+            box-shadow: 0 0 5px rgba(140, 111, 74, 0.5);
         }
         button {
             display: block;
-            margin: 10px auto;
-            padding: 12px 20px;
+            margin: 20px auto;
+            padding: 14px 25px;
             font-size: 16px;
+            font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            background-color: #8c6f4a; /* Medium brown */
+            background-color: #8c6f4a;
             color: #fff7e6;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 320px;
         }
         button:hover {
             background-color: #755c48;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(1px);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Login</h2>
+        <h2></h2>
         <form onsubmit="return validateLogin()">
-            <input type="text" id="username" placeholder="Enter Username" required>
-            <input type="password" id="password" placeholder="Enter Password" required>
-            <button type="submit">Login</button>
+            <input type="text" id="username" placeholder="Tài Khoản" required>
+            <input type="password" id="password" placeholder="Mật Khẩu" required>
+            <button type="submit">ĐĂNG NHẬP</button>
         </form>
     </div>
 
@@ -67,12 +101,12 @@
             const validPassword = '123456';
 
             if (username === validUsername && password === validPassword) {
-                alert('Login successful!');
+                alert('Đăng nhập thành công!');
                 // Redirect to the landing page
                 window.location.href = 'Work Schedule.html'; // Replace with your landing page URL
                 return false; // Prevent form submission
             } else {
-                alert('Invalid username or password!');
+                alert('Tên đăng nhập hoặc mật khẩu không đúng!');
                 return false; // Prevent form submission
             }
         }
