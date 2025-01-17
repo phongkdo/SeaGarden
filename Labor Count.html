@@ -1,0 +1,353 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>BẢNG TÍNH CÔNG</title>
+      <style>
+         /* General table styles with warm earthy color scheme */
+         body {
+         font-family: Roboto;
+         margin: 20px;
+         background-color: #f7f2e8; /* Light beige */
+         }
+         table {
+         width: 100%;
+         border-collapse: collapse;
+         border-radius: 10px;
+         overflow: hidden;
+         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         margin-top: 20px;
+         background-color: #fff7e6; /* Soft cream */
+         }
+         th, td {
+         border: 1px solid #d3c6a7; /* Muted brown */
+         text-align: center;
+         vertical-align: middle;
+         padding: 3px;
+         }
+         th {
+         background-color: #a67c52; /* Warm brown */
+         color: #fff7e6; /* Cream text */
+         font-size: 16px;
+         }
+         .header {
+         background-color: #755c48; /* Deep earthy brown */
+         color: #fefaf2; /* Light cream */
+         font-size: 20px;
+         font-weight: bold;
+         text-align: center;
+         }
+         .status-dropdown {
+         background-color: #e3fceb; /* Off-white */
+         }
+         .total-column {
+         background-color: #e4d5b7; /* Soft tan */
+         font-weight: bold;
+         min-width: 30px; /* Minimum width for the column */
+         max-width: 90px; /* Optional: set a maximum width */
+         border-radius: 5px;
+         border: 1px solid #b89c7a; /* Muted tan */
+         text-align: center;
+         overflow: hidden; /* Prevent overflowing content */
+         text-overflow: ellipsis; /* Add ellipsis (...) for long text */
+         white-space: nowrap; /* Prevent text from wrapping to the next line */
+         }
+         .name-column {
+         min-width: 70px; /* Minimum width for the column */
+         max-width: 200px; /* Optional: set a maximum width */
+         border-radius: 5px;
+         font-size: 14px;
+         border: 1px solid #b89c7a; /* Muted tan */
+         text-align: center;
+         text-transform: uppercase;
+         overflow: hidden; /* Prevent overflowing content */
+         text-overflow: ellipsis; /* Add ellipsis (...) for long text */
+         white-space: nowrap; /* Prevent text from wrapping to the next line */
+         }
+         select, input[type="date"], input[type="text"] {
+         font-size: 14px;
+         width: 90%;
+         padding: 2px;
+         border-radius: 5px;
+         border: 1px solid #b89c7a; /* Muted tan */
+         text-align: center;
+         }
+         .date-row {
+         background-color: #d1bfa4; /* Warm beige */
+         font-weight: bold;
+         text-align: center;
+         }
+         .add-row-btn {
+         margin-top: 20px;
+         padding: 12px 20px;
+         background-color: #8c6f4a; /* Medium brown */
+         color: #fff7e6;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         font-size: 16px;
+         }
+         .add-row-btn:hover {
+         background-color: #755c48; /* Deep earthy brown */
+         }
+         .delete-btn {
+         background: none;
+         border: none;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         height: 100%;
+         width: 100%;
+         }
+         .delete-btn:hover svg circle {
+         fill: #d32f2f; /* Darker red for hover effect */
+         }
+         .delete-btn svg {
+         transition: fill 0.2s ease, transform 0.2s ease;
+         display: block;
+         margin: auto;
+         }
+         .delete-btn:hover svg {
+         transform: scale(1.1); /* Slight zoom effect on hover */
+         }
+         /* Hover effect on table rows */
+         tbody tr:hover {
+         background-color: #f9f2df; /* Soft cream */
+         transform: scale(1.01);
+         }
+         /* Mobile responsive adjustments */
+         @media (max-width: 768px) {
+         th, td {
+         padding: 8px;
+         font-size: 16px;
+         }
+         .add-row-btn, .delete-btn {
+         font-size: 16px;
+         padding: 8px 10px;
+         }
+         table {
+         display: block;
+         overflow-x: auto;
+         white-space: nowrap;
+         }
+         .dragging {
+         opacity: 1;
+         background-color: #b45f06; /* Highlight color */
+         }
+         }
+      </style>
+   </head>
+   <body>
+      <table id="datepick">
+         <thead>
+            <tr class="date-row">
+               <td><label for="beginDate">BẮT ĐẦU:</label></td>
+               <td><input type="date" id="beginDate"></td>
+               <td><label for="endDate">KẾT THÚC:</label></td>
+               <td><input type="date" id="endDate"></td>
+            </tr>
+            <tr>
+               <th colspan="20" class="header">BẢN TÍNH CÔNG NHÀ HÀNG & BẾP</th>
+            </tr>
+         </thead>
+      </table>
+      <div id="tableContainer"></div>
+      <button class="add-row-btn" onclick="addRow()">THÊM NHÂN VIÊN</button>
+      <button class="add-row-btn" onclick="exportToImage()">TẢI ẢNH</button>
+	  <button class="add-row-btn" onclick="window.location.href='Work Schedule.html'">LỊCH LÀM VIỆC</button>
+      <script>
+         document.getElementById('endDate').addEventListener('change', generateTable);
+         
+         function generateTable() {
+             const beginDate = document.getElementById('beginDate').value;
+             const endDate = document.getElementById('endDate').value;
+             const tableContainer = document.getElementById('tableContainer');
+         
+             if (!beginDate || !endDate) {
+                 tableContainer.innerHTML = ''; // Clear table if inputs are incomplete
+                 return;
+             }
+         
+             const begin = new Date(`${beginDate}T00:00:00`);
+         const end = new Date(`${endDate}T00:00:00`);
+         
+             if (begin > end) {
+                 alert('Begin date must be earlier than or equal to end date.');
+                 tableContainer.innerHTML = ''; // Clear table on invalid range
+                 return;
+             }
+         
+             let currentDate = begin;
+             const dates = [];
+         
+             while (currentDate <= end) {
+         const day = String(currentDate.getDate()).padStart(2, '0');
+                 const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                 dates.push(`${day}/${month}`);
+                 currentDate.setDate(currentDate.getDate() + 1);
+             }
+         
+             let tableHTML = '<table id="dynamicTable"><tr><th>NHÂN VIÊN</th>';
+         
+             // Add table headers
+             dates.forEach(date => {
+                 tableHTML += `<th>${date}</th>`;
+             });
+         
+             // Add additional headers
+             tableHTML += '<th>TỔNG CÔNG</th><th>CÔNG DƯ</th><th>TÍNH LƯƠNG</th><th>XÓA</th></tr>';
+         
+             // Add empty rows
+             for (let i = 0; i < 4; i++) {
+                 tableHTML += '<tr><td><input class="name-column" type="text" value="TÊN"></td>';;
+                 dates.forEach(() => {
+                     tableHTML += `<td>
+                   <select class="status-dropdown" onchange="updateDropdownColor(this)">
+                      <option value="A" style="background-color: #e3fceb;">A</option>
+                         <option value="A+1H" style="background-color: #e3fceb;">A+1H</option>
+                         <option value="A+2H" style="background-color: #e3fceb;">A+2H</option>
+         <option value="A+3H" style="background-color: #e3fceb;">A+3H</option>
+                         <option value="A+4H" style="background-color: #e3fceb;">A+4H</option>
+                      <option value="OFF" style="background-color: #f3e908;">OFF</option>
+                   </select>
+                </td>`;
+                 });
+                 // Add additional cells for the new columns
+                 tableHTML += '<td><input class="total-column" id="tc" type="text" value="" readonly></td><td><input class="total-column" id="cd" type="text" value=""></td><td><input class="total-column" id="cd" type="text" value="" readonly></td>';
+                 tableHTML += `<td><button class="delete-btn" onclick="deleteRow(this)">
+                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                         <circle cx="12" cy="12" r="12" fill="#ff4d4d"/>
+                         <path d="M9 9h6v10H9z" fill="#ffffff"/>
+                         <path d="M10 5h4v2h-4z" fill="#ffffff"/>
+                         <path d="M7 7h10v2H7z" fill="#ffffff"/>
+                     </svg>
+                 </button></td></tr>`;
+             }
+         
+             tableHTML += '</table>';
+         
+             tableContainer.innerHTML = tableHTML;
+         
+         // Calculate totals for all rows after populating the table
+         document.querySelectorAll('#dynamicTable tr').forEach(row => {
+             row.querySelectorAll('.status-dropdown').forEach(dropdown => {
+                 updateTotals(dropdown);
+             });
+         });
+         }
+         
+         function createRow(dateColumns) {
+             let rowHTML = '<tr><td><input class="name-column" type="text" value="TÊN"></td>';
+             for (let i = 0; i < dateColumns; i++) {
+                 rowHTML += `<td>
+                     <select class="status-dropdown" onchange="updateDropdownColor(this)">
+                         <option value="A" style="background-color: #e3fceb;">A</option>
+                         <option value="A+1H" style="background-color: #e3fceb;">A+1H</option>
+                         <option value="A+2H" style="background-color: #e3fceb;">A+2H</option>
+         <option value="A+3H" style="background-color: #e3fceb;">A+3H</option>
+                         <option value="A+4H" style="background-color: #e3fceb;">A+4H</option>
+                         <option value="OFF" style="background-color: #f3e908;">OFF</option>
+                     </select>
+                 </td>`;
+             }
+             rowHTML += '<td><input class="total-column" id="tc" type="text" value=""></td><td><input class="total-column" id="cd" type="text" value=""></td><td><input class="total-column" id="tc" type="text" value=""></td>';
+             rowHTML += `<td><button class="delete-btn" onclick="deleteRow(this)">
+                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                     <circle cx="12" cy="12" r="12" fill="#ff4d4d"/>
+                     <path d="M9 9h6v10H9z" fill="#ffffff"/>
+                     <path d="M10 5h4v2h-4z" fill="#ffffff"/>
+                     <path d="M7 7h10v2H7z" fill="#ffffff"/>
+                 </svg>
+             </button></td></tr>`;
+             return rowHTML;
+         }
+         
+         function addRow() {
+             const table = document.getElementById('dynamicTable');
+             const headers = table.rows[0].cells.length - 5; // Calculate number of date columns
+             const newRow = createRow(headers);
+             table.insertAdjacentHTML('beforeend', newRow);
+         
+         // Calculate totals for all rows after populating the table
+         document.querySelectorAll('#dynamicTable tr').forEach(row => {
+             row.querySelectorAll('.status-dropdown').forEach(dropdown => {
+                 updateTotals(dropdown);
+             });
+         });
+         }
+         
+         function deleteRow(button) {
+             const row = button.parentNode.parentNode;
+             row.parentNode.removeChild(row);
+         }
+         
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+      <script>
+         function exportToImage() {
+         	html2canvas(document.body).then(canvas => {
+         		// Create a link element to download the image
+         		const link = document.createElement('a');
+         		link.download = 'Bang_Tinh_Cong.png'; // Default file name
+         		link.href = canvas.toDataURL('image/png'); // Convert canvas to data URL
+         		link.click(); // Trigger download
+         	}).catch(error => {
+         		console.error('Error exporting to image:', error);
+         		alert('Xuất hình ảnh không thành công, vui lòng thử lại!');
+         	});
+         }
+         
+         
+         function updateTotals(selectElement) {
+         const row = selectElement.closest('tr');
+         const cells = row.querySelectorAll('td select');
+         let totalA = 0; // Count of 'A'
+         let totalHours = 0; // Count of hours (1H, 2H, etc.)
+         
+         cells.forEach(cell => {
+            const value = cell.value;
+            if (value.startsWith('A')) {
+                totalA += 1; // Increment for every 'A'
+                const hours = parseInt(value.match(/\d+/)) || 0; // Extract the number of hours
+                totalHours += hours;
+            }
+         });
+         
+         const totalColumn = row.querySelector('.total-column');
+         totalColumn.value = `${totalA}A+${totalHours}H`; // Update 'Tổng Công' column
+         
+         updateSalary(row); // Update the salary column
+         }
+         
+         function updateSalary(row) {
+         const totalColumn = row.querySelector('.total-column'); // 'Tổng Công'
+         const extraColumn = row.querySelector('input[id="cd"]'); // 'Công Dư'
+         const salaryColumn = row.querySelectorAll('.total-column')[2]; // 'Tính Lương'
+         
+         // Parse values from Tổng Công
+         const [totalA, totalH] = totalColumn.value.split('A+').map(v => parseInt(v) || 0);
+         const extra = parseInt(extraColumn.value) || 0;
+         
+         // Calculate the new salary value
+         const newA = totalA + extra;
+         salaryColumn.value = `${newA}A+${totalH}H`; // Update 'Tính Lương'
+         }
+         
+         // Attach event listener to all 'Công Dư' inputs to trigger salary calculation
+         document.addEventListener('input', function (event) {
+         if (event.target.id === 'cd') {
+         const row = event.target.closest('tr');
+         updateSalary(row);
+         }
+         });
+         
+         function updateDropdownColor(selectElement) {
+         const selectedOption = selectElement.options[selectElement.selectedIndex];
+         selectElement.style.backgroundColor = selectedOption.style.backgroundColor;
+         updateTotals(selectElement); // Recalculate totals when dropdown changes
+         }
+      </script>
+   </body>
+</html>
