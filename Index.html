@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRANG CHỦ</title>
+    <title>ĐĂNG NHẬP</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,22 +16,31 @@
         }
         .container {
             text-align: center;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
         }
         button {
             display: block;
             margin: 10px auto;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
-
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            background-color: #8c6f4a; /* Medium brown */
+            color: #fff7e6;
             transition: background-color 0.3s;
-
-			margin-top: 20px;
-			 padding: 12px 20px;
-			 background-color: #8c6f4a; /* Medium brown */
-			 color: #fff7e6;           
         }
         button:hover {
             background-color: #755c48;
@@ -40,9 +49,33 @@
 </head>
 <body>
     <div class="container">
-        <img src="logo.png" alt="Logo" class="logo">
-        <button onclick="window.location.href='Work Schedule.html'">LỊCH LÀM VIỆC</button>
-        <button onclick="window.location.href='Labor Count.html'">BẢNG TÍNH CÔNG</button>
+        <h2>Login</h2>
+        <form onsubmit="return validateLogin()">
+            <input type="text" id="username" placeholder="Enter Username" required>
+            <input type="password" id="password" placeholder="Enter Password" required>
+            <button type="submit">Login</button>
+        </form>
     </div>
+
+    <script>
+        function validateLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Replace these values with your own credentials
+            const validUsername = 'hieuvo';
+            const validPassword = '123456';
+
+            if (username === validUsername && password === validPassword) {
+                alert('Login successful!');
+                // Redirect to the landing page
+                window.location.href = 'Work Schedule.html'; // Replace with your landing page URL
+                return false; // Prevent form submission
+            } else {
+                alert('Invalid username or password!');
+                return false; // Prevent form submission
+            }
+        }
+    </script>
 </body>
 </html>
