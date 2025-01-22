@@ -704,7 +704,7 @@ updateDate();
                 let count = 0;
                 rows.forEach(row => {
                     const select = row.cells[columnIndex].querySelector('select');
-                    if (select && select.value === "A") {
+                    if (select && select.value !== "OFF") {
                         count++;
                     }
                 });
