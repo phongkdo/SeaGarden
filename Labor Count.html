@@ -77,9 +77,6 @@
          background-color: #d1bfa4; /* Warm beige */
          font-weight: bold;
          text-align: center;
-		 font-family: Roboto;
-		 color:white;
-		 background-color: #8c6f4a; /* Medium brown */
          }
          .add-row-btn {
          margin-top: 20px;
@@ -146,10 +143,10 @@
       <table id="datepick">
          <thead>
             <tr class="date-row">
-               <td><label for="beginDate">BẮT ĐẦU:</label>
-               <input type="date" id="beginDate"></td>
-               <td><label for="endDate">KẾT THÚC:</label>
-               <input type="date" id="endDate"></td>
+               <td><label for="beginDate">BẮT ĐẦU:</label></td>
+               <td><input type="date" id="beginDate"></td>
+               <td><label for="endDate">KẾT THÚC:</label></td>
+               <td><input type="date" id="endDate"></td>
             </tr>
             <tr>
                <th colspan="20" class="header">BẢN TÍNH CÔNG NHÀ HÀNG & BẾP</th>
@@ -159,7 +156,6 @@
       <div id="tableContainer"></div>
       <button class="add-row-btn" onclick="addRow()">THÊM NHÂN VIÊN</button>
       <button class="add-row-btn" onclick="exportToImage()">TẢI ẢNH</button>
-	  <button class="add-row-btn" onclick="window.location.href='Work Schedule.html'">LỊCH LÀM VIỆC</button>
       <script>
          document.getElementById('endDate').addEventListener('change', generateTable);
          
@@ -211,14 +207,14 @@
                       <option value="A" style="background-color: #e3fceb;">A</option>
                          <option value="A+1H" style="background-color: #e3fceb;">A+1H</option>
                          <option value="A+2H" style="background-color: #e3fceb;">A+2H</option>
-         <option value="A+3H" style="background-color: #e3fceb;">A+3H</option>
+						 <option value="A+3H" style="background-color: #e3fceb;">A+3H</option>
                          <option value="A+4H" style="background-color: #e3fceb;">A+4H</option>
                       <option value="OFF" style="background-color: #f3e908;">OFF</option>
                    </select>
                 </td>`;
                  });
                  // Add additional cells for the new columns
-                 tableHTML += '<td><input class="total-column" id="tc" type="text" value="" readonly></td><td><input class="total-column" id="cd" type="text" value=""></td><td><input class="total-column" id="cd" type="text" value="" readonly></td>';
+                 tableHTML += '<td><input class="total-column" id="tc" type="text" value="" readonly></td><td><input class="total-column" id="cd" type="text" value=""></td><td><input class="total-column" id="tl" type="text" value=""></td>';
                  tableHTML += `<td><button class="delete-btn" onclick="deleteRow(this)">
                      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                          <circle cx="12" cy="12" r="12" fill="#ff4d4d"/>
@@ -249,13 +245,13 @@
                          <option value="A" style="background-color: #e3fceb;">A</option>
                          <option value="A+1H" style="background-color: #e3fceb;">A+1H</option>
                          <option value="A+2H" style="background-color: #e3fceb;">A+2H</option>
-         <option value="A+3H" style="background-color: #e3fceb;">A+3H</option>
+						<option value="A+3H" style="background-color: #e3fceb;">A+3H</option>
                          <option value="A+4H" style="background-color: #e3fceb;">A+4H</option>
                          <option value="OFF" style="background-color: #f3e908;">OFF</option>
                      </select>
                  </td>`;
              }
-             rowHTML += '<td><input class="total-column" id="tc" type="text" value=""></td><td><input class="total-column" id="cd" type="text" value=""></td><td><input class="total-column" id="tc" type="text" value=""></td>';
+             rowHTML += '<td><input class="total-column" id="tc" type="text" value="" readonly></td><td><input class="total-column" id="cd" type="text" value=""></td><td><input class="total-column" id="tl" type="text" value=""></td>';
              rowHTML += `<td><button class="delete-btn" onclick="deleteRow(this)">
                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                      <circle cx="12" cy="12" r="12" fill="#ff4d4d"/>
